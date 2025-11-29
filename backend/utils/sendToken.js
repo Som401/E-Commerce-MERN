@@ -1,7 +1,18 @@
-// Utility files will be added in upcoming stories
+const sendToken = (user, statusCode, res) => {
+    const token = user.getJWTToken();
 
-// sendToken.js - JWT token sender
-// sendEmail.js - Email service
-// searchFeatures.js - Product search and filter features
+    const options = {
+        expires: new Date(
+            Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true
+    }
 
-module.exports = {};
+    res.status(statusCode).cookie('token', token, options).json({
+        success: true,
+        user,
+        token,
+    });
+}
+
+module.exports = sendToken;
