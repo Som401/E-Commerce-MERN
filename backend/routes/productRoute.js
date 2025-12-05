@@ -1,6 +1,40 @@
 const express = require('express');
+const { 
+    getAllProducts, 
+    createProduct, 
+    updateProduct, 
+    deleteProduct, 
+    getProductDetails,
+    createProductReview,
+    getProductReviews,
+    deleteReview,
+    getAdminProducts
+} = require('../controllers/productController');
+const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
+
 const router = express.Router();
 
-// Routes will be added here in Story 1.3
+// ========================================
+// ROUTES PUBLIQUES (pas besoin d'être connecté)
+// ========================================
+router.route('/products').get(getAllProducts);
+router.route('/product/:id').get(getProductDetails);
+router.route('/reviews').get(getProductReviews);
+
+// ========================================
+// ROUTES PROTÉGÉES (besoin d'être connecté)
+// ========================================
+router.route('/review').put(isAuthenticatedUser, createProductReview);
+router.route('/review/:id').delete(isAuthenticatedUser, deleteReview);
+
+// ========================================
+// ROUTES ADMIN (besoin d'être admin)
+// ========================================
+router.route('/admin/products').get(isAuthenticatedUser, authorizeRoles("admin"), getAdminProducts);
+router.route('/admin/product/new').post(isAuthenticatedUser, authorizeRoles("admin"), createProduct);
+
+router.route('/admin/product/:id')
+    .put(isAuthenticatedUser, authorizeRoles("admin"), updateProduct)
+    .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteProduct);
 
 module.exports = router;

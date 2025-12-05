@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
-const MONGO_URI = process.env.MONGO_URI;
-
-// Set strictQuery to false to suppress warning
-mongoose.set('strictQuery', false);
 
 const connectDatabase = () => {
-    mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-        .then((data) => {
-            console.log(`Mongoose Connected to: ${data.connection.host}`);
-        });
-}
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((con) => {
+    console.log(`MongoDB Atlas Database connected with HOST: ${con.connection.host}`);
+  })
+  .catch((err) => {
+    console.log(`MongoDB connection error: ${err}`);
+    process.exit(1);
+  });
+};
 
 module.exports = connectDatabase;
