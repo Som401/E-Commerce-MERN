@@ -26,6 +26,23 @@ const Account = () => {
 
                                 <div className="flex flex-col gap-12 m-4 sm:mx-8 sm:my-6">
 
+                                    {/* Profile Avatar Section */}
+                                    <div className="flex flex-col gap-5 items-start">
+                                        <div className="flex items-center gap-6 w-full">
+                                            <img
+                                                draggable="false"
+                                                className="w-24 h-24 rounded-full object-cover border-2 border-primary-blue"
+                                                src={user.avatar?.url || "https://res.cloudinary.com/demo/image/upload/v1/avatar_placeholder.png"}
+                                                alt={user.name}
+                                            />
+                                            <div className="flex flex-col gap-1">
+                                                <span className="font-medium text-xl">{user.name}</span>
+                                                <span className="text-sm text-gray-500">{user.email}</span>
+                                                <Link to="/account/update" className="text-sm text-primary-blue font-medium mt-2">Edit Profile Picture</Link>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="flex flex-col gap-5 items-start">
 
                                         <span className="font-medium text-lg">Personal Information</span>
