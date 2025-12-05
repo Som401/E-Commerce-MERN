@@ -38,4 +38,4 @@ module.exports = router;
 
 
 // Remplace findByIdAndRemove par findByIdAndDelete
-await User.findByIdAndDelete(req.params.id);
+// await User.findByIdAndDelete(req.params.id);
