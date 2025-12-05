@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Loader from '../Layouts/Loader';
 import MetaData from '../Layouts/MetaData';
-import MinCategory from '../Layouts/MinCategory';
+import Header from '../Layouts/Header/Header';
 
 const Account = () => {
 
@@ -12,11 +12,11 @@ const Account = () => {
     return (
         <>
             <MetaData title="My Profile | Flipkart" />
+            <Header />
 
             {loading ? <Loader /> : (
                 <>
-                    <MinCategory />
-                    <main className="w-full mt-12 sm:mt-0">
+                    <main className="w-full mt-20 sm:mt-16">
 
                         <div className="flex gap-3.5 sm:w-11/12 sm:mt-4 m-auto mb-7">
 

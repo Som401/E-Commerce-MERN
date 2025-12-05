@@ -8,6 +8,7 @@ import { UPDATE_PASSWORD_RESET } from '../../constants/userConstants';
 import BackdropLoader from '../Layouts/BackdropLoader';
 import MetaData from '../Layouts/MetaData';
 import FormSidebar from './FormSidebar';
+import Header from '../Layouts/Header/Header';
 
 const UpdatePassword = () => {
 
@@ -57,9 +58,10 @@ const UpdatePassword = () => {
     return (
         <>
             <MetaData title="Password Update | Flipkart" />
+            <Header />
 
             {loading && <BackdropLoader />}
-            <main className="w-full mt-12 sm:pt-20 sm:mt-0">
+            <main className="w-full mt-20 sm:mt-20">
 
                 <div className="flex sm:w-4/6 sm:mt-4 m-auto mb-7 bg-white shadow-lg">
 

@@ -45,25 +45,25 @@ const Sidebar = ({ activeTab }) => {
 
                 {/* Personal Information Section */}
                 <div className="flex flex-col w-full gap-0">
-                    <div className={`${activeTab === "profile" ? "bg-blue-50 text-primary-blue" : "hover:bg-gray-50"} flex items-center gap-5 px-4 py-4 border-b cursor-pointer`}>
+                    <div className={`${activeTab === "profile" ? "bg-purple-50 text-primary-blue" : "hover:bg-gray-50"} flex items-center gap-5 px-4 py-4 border-b cursor-pointer`}>
                         <span className="flex items-center gap-5 w-full">
                             <AccountCircleIcon sx={{ fontSize: '18px' }} />
                             PERSONAL INFORMATION
                         </span>
                     </div>
 
-                    <Link to="/account" className={`${activeTab === "profile" ? "bg-blue-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-5 px-11 py-3.5 border-b`}>
+                    <Link to="/account" className={`${activeTab === "profile" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-5 px-11 py-3.5 border-b`}>
                         Profile Information
                     </Link>
-                    <Link to="/account/update" className={`${activeTab === "addresses" ? "bg-blue-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
+                    <Link to="/account/update" className={`${activeTab === "addresses" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
                         <LocationOnIcon sx={{ fontSize: '16px' }} />
                         Manage Addresses
                     </Link>
-                    <Link to="/password/update" className={`${activeTab === "password" ? "bg-blue-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
+                    <Link to="/password/update" className={`${activeTab === "password" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
                         <LockIcon sx={{ fontSize: '16px' }} />
                         Change Password
                     </Link>
-                    <Link to="/payment/methods" className={`${activeTab === "payments" ? "bg-blue-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
+                    <Link to="/payment/methods" className={`${activeTab === "payments" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
                         <CreditCardIcon sx={{ fontSize: '16px' }} />
                         Payment Methods
                     </Link>
@@ -71,7 +71,7 @@ const Sidebar = ({ activeTab }) => {
 
                 {/* My Orders Section */}
                 <div className="flex flex-col w-full gap-0">
-                    <Link to="/orders" className={`${activeTab === "orders" ? "bg-blue-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-5 px-4 py-4 border-b`}>
+                    <Link to="/orders" className={`${activeTab === "orders" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-5 px-4 py-4 border-b`}>
                         <span className="flex items-center gap-5 w-full">
                             <FolderIcon sx={{ fontSize: '18px' }} />
                             MY ORDERS
@@ -82,7 +82,7 @@ const Sidebar = ({ activeTab }) => {
 
                 {/* My Wishlist Section */}
                 <div className="flex flex-col w-full gap-0">
-                    <Link to="/wishlist" className={`${activeTab === "wishlist" ? "bg-blue-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-5 px-4 py-4 border-b`}>
+                    <Link to="/wishlist" className={`${activeTab === "wishlist" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-5 px-4 py-4 border-b`}>
                         <span className="flex items-center gap-5 w-full">
                             <FavoriteIcon sx={{ fontSize: '18px' }} />
                             MY WISHLIST
