@@ -14,11 +14,11 @@ const Product = (props) => {
     const { enqueueSnackbar } = useSnackbar();
 
     const { wishlistItems } = useSelector((state) => state.wishlist);
-    
+
     const itemInWishlist = wishlistItems.some((i) => i.product === _id);
 
     const addToWishlistHandler = () => {
-        if(itemInWishlist) {
+        if (itemInWishlist) {
             dispatch(removeFromWishlist(_id));
             enqueueSnackbar("Remove From Wishlist", { variant: "success" });
         } else {
@@ -49,8 +49,8 @@ const Product = (props) => {
 
                 {/* <!-- price container --> */}
                 <div className="flex items-center gap-1.5 text-md font-medium">
-                    <span>₹{price.toLocaleString()}</span>
-                    <span className="text-gray-500 line-through text-xs">₹{cuttedPrice.toLocaleString()}</span>
+                    <span>€{price.toLocaleString()}</span>
+                    <span className="text-gray-500 line-through text-xs">€{cuttedPrice.toLocaleString()}</span>
                     <span className="text-xs text-primary-green">{getDiscount(price, cuttedPrice)}%&nbsp;off</span>
                 </div>
                 {/* <!-- price container --> */}

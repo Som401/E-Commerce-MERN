@@ -25,8 +25,8 @@ import { NEW_REVIEW_RESET } from '../../constants/productConstants';
 import { addItemsToCart } from '../../actions/cartAction';
 import { getDeliveryDate, getDiscount } from '../../utils/functions';
 import { addToWishlist, removeFromWishlist } from '../../actions/wishlistAction';
-import MinCategory from '../Layouts/MinCategory';
 import MetaData from '../Layouts/MetaData';
+import Header from '../Layouts/Header/Header';
 
 const ProductDetails = () => {
 
@@ -45,6 +45,7 @@ const ProductDetails = () => {
     const { success, error: reviewError } = useSelector((state) => state.newReview);
     const { cartItems } = useSelector((state) => state.cart);
     const { wishlistItems } = useSelector((state) => state.wishlist);
+    const { isAuthenticated } = useSelector((state) => state.user);
 
     const settings = {
         autoplay: true,
@@ -85,6 +86,10 @@ const ProductDetails = () => {
     }
 
     const addToCartHandler = () => {
+        if (!isAuthenticated) {
+            enqueueSnackbar("Please login to add items to cart", { variant: "warning" });
+            return;
+        }
         dispatch(addItemsToCart(productId));
         enqueueSnackbar("Product Added To Cart", { variant: "success" });
     }
@@ -100,6 +105,10 @@ const ProductDetails = () => {
     }
 
     const buyNow = () => {
+        if (!isAuthenticated) {
+            enqueueSnackbar("Please login to buy products", { variant: "warning" });
+            return;
+        }
         addToCartHandler();
         navigate('/shipping');
     }
@@ -132,8 +141,8 @@ const ProductDetails = () => {
             {loading ? <Loader /> : (
                 <>
                     <MetaData title={product.name} />
-                    <MinCategory />
-                    <main className="mt-12 sm:mt-0">
+                    <Header />
+                    <main className="mt-20 sm:mt-4">
 
                         {/* <!-- product image & description container --> */}
                         <div className="w-full flex flex-col sm:flex-row bg-white sm:p-2 relative">
@@ -190,8 +199,8 @@ const ProductDetails = () => {
                                     {/* <!-- price desc --> */}
                                     <span className="text-primary-green text-sm font-medium">Special Price</span>
                                     <div className="flex items-baseline gap-2 text-3xl font-medium">
-                                        <span className="text-gray-800">₹{product.price?.toLocaleString()}</span>
-                                        <span className="text-base text-gray-500 line-through">₹{product.cuttedPrice?.toLocaleString()}</span>
+                                        <span className="text-gray-800">€{product.price?.toLocaleString()}</span>
+                                        <span className="text-base text-gray-500 line-through">€{product.cuttedPrice?.toLocaleString()}</span>
                                         <span className="text-base text-primary-green">{getDiscount(product.price, product.cuttedPrice)}%&nbsp;off</span>
                                     </div>
                                     {product.stock <= 10 && product.stock > 0 && (
@@ -211,7 +220,6 @@ const ProductDetails = () => {
 
                                     {/* <!-- warranty & brand --> */}
                                     <div className="flex gap-8 mt-2 items-center text-sm">
-                                        <img draggable="false" className="w-20 h-8 p-0.5 border object-contain" src={product.brand?.logo.url} alt={product.brand && product.brand.name} />
                                         <span>{product.warranty} Year Warranty <Link className="font-medium text-primary-blue" to="/">Know More</Link></span>
                                     </div>
                                     {/* <!-- warranty & brand --> */}
@@ -265,18 +273,9 @@ const ProductDetails = () => {
                                     </div>
                                     {/* <!-- seller details --> */}
 
-                                    {/* <!-- flipkart plus banner --> */}
-                                    <div className="sm:w-1/2 mt-4 border">
-                                        <img draggable="false" className="w-full h-full object-contain" src="https://rukminim1.flixcart.com/lockin/763/305/images/promotion_banner_v2_active.png" alt="" />
-                                    </div>
-                                    {/* <!-- flipkart plus banner --> */}
 
-                                    {/* <!-- description details --> */}
-                                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-14 mt-4 items-stretch text-sm">
-                                        <p className="text-gray-500 font-medium">Description</p>
-                                        <span>{product.description}</span>
-                                    </div>
-                                    {/* <!-- description details --> */}
+
+
 
                                     {/* <!-- border box --> */}
                                     <div className="w-full mt-6 rounded-sm border flex flex-col">
@@ -308,7 +307,12 @@ const ProductDetails = () => {
                                     <div className="w-full mt-4 rounded-sm border flex flex-col">
                                         <div className="flex justify-between items-center border-b px-6 py-4">
                                             <h1 className="text-2xl font-medium">Ratings & Reviews</h1>
-                                            <button onClick={handleDialogClose} className="shadow bg-primary-yellow text-white px-4 py-2 rounded-sm hover:shadow-lg">Rate Product</button>
+                                            {/* <!-- rate product btn --> */}
+                                            {isAuthenticated ? (
+                                                <button onClick={handleDialogClose} className="shadow bg-primary-yellow text-white px-4 py-2 rounded-sm hover:shadow-lg">Rate Product</button>
+                                            ) : (
+                                                <button onClick={() => navigate('/login')} className="shadow bg-gray-400 text-white px-4 py-2 rounded-sm hover:shadow-lg">Login to Rate Product</button>
+                                            )}
                                         </div>
 
                                         <Dialog
@@ -379,7 +383,7 @@ const ProductDetails = () => {
 
                         {/* Sliders */}
                         <div className="flex flex-col gap-3 mt-6">
-                            <ProductSlider title={"Similar Products"} tagline={"Based on the category"} />
+                            <ProductSlider title={"Similar Products"} tagline={"Based on the category"} category={product.category} />
                         </div>
 
                     </main>

@@ -1,4 +1,4 @@
-import { mockProducts } from "../utils/mockData";
+import axios from 'axios';
 import {
     ALL_PRODUCTS_FAIL,
     ALL_PRODUCTS_REQUEST,
@@ -33,142 +33,100 @@ import {
     SLIDER_PRODUCTS_FAIL,
 } from "../constants/productConstants";
 
-// Simulate async delay
-const simulateDelay = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms));
-
-// Get All Products --- Filter/Search/Sort (MOCK)
+// Get All Products --- Filter/Search/Sort
 export const getProducts =
-    (keyword = "", category, price = [0, 200000], ratings = 0, currentPage = 1) => async (dispatch) => {
+    (keyword = "", category, price = [0, 6000], ratings = 0, currentPage = 1, sort = "") => async (dispatch) => {
         try {
             dispatch({ type: ALL_PRODUCTS_REQUEST });
 
-            await simulateDelay(400);
+            let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}`;
 
-            let filteredProducts = [...mockProducts];
-
-            // Filter by keyword (search in name and description)
-            if (keyword) {
-                filteredProducts = filteredProducts.filter(product =>
-                    product.name.toLowerCase().includes(keyword.toLowerCase()) ||
-                    product.description.toLowerCase().includes(keyword.toLowerCase())
-                );
-            }
-
-            // Filter by category
             if (category) {
-                filteredProducts = filteredProducts.filter(product =>
-                    product.category.toLowerCase() === category.toLowerCase()
-                );
+                link += `&category=${category}`;
             }
 
-            // Filter by price range
-            filteredProducts = filteredProducts.filter(product =>
-                product.price >= price[0] && product.price <= price[1]
-            );
+            if (sort) {
+                link += `&sort=${sort}`;
+            }
 
-            // Filter by ratings
-            filteredProducts = filteredProducts.filter(product =>
-                product.ratings >= ratings
-            );
-
-            // Pagination
-            const productsPerPage = 8;
-            const totalProducts = filteredProducts.length;
-            const startIndex = (currentPage - 1) * productsPerPage;
-            const endIndex = startIndex + productsPerPage;
-            const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+            const { data } = await axios.get(link);
 
             dispatch({
                 type: ALL_PRODUCTS_SUCCESS,
-                payload: {
-                    products: paginatedProducts,
-                    productsCount: totalProducts,
-                    resultPerPage: productsPerPage,
-                    filteredProductsCount: totalProducts,
-                },
+                payload: data,
             });
         } catch (error) {
             dispatch({
                 type: ALL_PRODUCTS_FAIL,
-                payload: "Failed to load products",
+                payload: error.response?.data?.message || "Failed to load products",
             });
         }
     };
 
-// Get All Products Of Same Category (MOCK)
+// Get All Products Of Same Category
 export const getSimilarProducts = (category) => async (dispatch) => {
     try {
         dispatch({ type: ALL_PRODUCTS_REQUEST });
 
-        await simulateDelay(300);
-
-        const filteredProducts = mockProducts.filter(product =>
-            product.category.toLowerCase() === category.toLowerCase()
-        );
+        const { data } = await axios.get(`/api/v1/products?category=${category}`);
 
         dispatch({
             type: ALL_PRODUCTS_SUCCESS,
-            payload: {
-                products: filteredProducts,
-                productsCount: filteredProducts.length,
-                resultPerPage: 8,
-                filteredProductsCount: filteredProducts.length,
-            },
+            payload: data,
         });
     } catch (error) {
         dispatch({
             type: ALL_PRODUCTS_FAIL,
-            payload: "Failed to load similar products",
+            payload: error.response?.data?.message || "Failed to load similar products",
         });
     }
 };
 
-// Get Product Details (MOCK)
+// Get Product Details
 export const getProductDetails = (id) => async (dispatch) => {
     try {
         dispatch({ type: PRODUCT_DETAILS_REQUEST });
 
-        await simulateDelay(300);
-
-        const product = mockProducts.find(p => p._id === id);
-
-        if (!product) {
-            throw new Error("Product not found");
-        }
+        const { data } = await axios.get(`/api/v1/product/${id}`);
 
         dispatch({
             type: PRODUCT_DETAILS_SUCCESS,
-            payload: product,
+            payload: data.product,
         });
     } catch (error) {
         dispatch({
             type: PRODUCT_DETAILS_FAIL,
-            payload: error.message || "Failed to load product details",
+            payload: error.response?.data?.message || "Failed to load product details",
         });
     }
 };
 
-// New/Update Review (MOCK)
+// New/Update Review
 export const newReview = (reviewData) => async (dispatch) => {
     try {
         dispatch({ type: NEW_REVIEW_REQUEST });
 
-        await simulateDelay(500);
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
 
-        // Simulate success
+        const { data } = await axios.put(`/api/v1/review`, reviewData, config);
+
         dispatch({
             type: NEW_REVIEW_SUCCESS,
-            payload: true,
+            payload: data.success,
         });
     } catch (error) {
         dispatch({
             type: NEW_REVIEW_FAIL,
-            payload: "Failed to submit review",
+            payload: error.response?.data?.message || "Failed to submit review",
         });
     }
 }
 
-// Get All Products ---PRODUCT SLIDER (MOCK with caching)
+// Get All Products ---PRODUCT SLIDER (with caching)
 export const getSliderProducts = (force = false) => async (dispatch, getState) => {
     try {
         // Get current state
@@ -187,136 +145,151 @@ export const getSliderProducts = (force = false) => async (dispatch, getState) =
 
         dispatch({ type: SLIDER_PRODUCTS_REQUEST });
 
-        await simulateDelay(300);
+        // Fetch ALL products for caching (no pagination)
+        const { data } = await axios.get('/api/v1/products?all=true');
 
         dispatch({
             type: SLIDER_PRODUCTS_SUCCESS,
-            payload: mockProducts,
+            payload: data.products,
         });
     } catch (error) {
         dispatch({
             type: SLIDER_PRODUCTS_FAIL,
-            payload: "Failed to load slider products",
+            payload: error.response?.data?.message || "Failed to load slider products",
         });
     }
 };
 
-// Get All Products ---ADMIN (MOCK)
+// Get All Products ---ADMIN
 export const getAdminProducts = () => async (dispatch) => {
     try {
         dispatch({ type: ADMIN_PRODUCTS_REQUEST });
 
-        await simulateDelay(300);
+        const { data } = await axios.get('/api/v1/admin/products');
 
         dispatch({
             type: ADMIN_PRODUCTS_SUCCESS,
-            payload: mockProducts,
+            payload: data.products,
         });
     } catch (error) {
         dispatch({
             type: ADMIN_PRODUCTS_FAIL,
-            payload: "Failed to load admin products",
+            payload: error.response?.data?.message || "Failed to load admin products",
         });
     }
 };
 
-// New Product ---ADMIN (MOCK)
+// New Product ---ADMIN
 export const createProduct = (productData) => async (dispatch) => {
     try {
         dispatch({ type: NEW_PRODUCT_REQUEST });
 
-        await simulateDelay(500);
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        const { data } = await axios.post(
+            `/api/v1/admin/product/new`,
+            productData,
+            config
+        );
 
         dispatch({
             type: NEW_PRODUCT_SUCCESS,
-            payload: {
-                success: true,
-                product: productData,
-            },
+            payload: data,
         });
     } catch (error) {
         dispatch({
             type: NEW_PRODUCT_FAIL,
-            payload: "Failed to create product",
+            payload: error.response?.data?.message || "Failed to create product",
         });
     }
 }
 
-// Update Product ---ADMIN (MOCK)
+// Update Product ---ADMIN
 export const updateProduct = (id, productData) => async (dispatch) => {
     try {
         dispatch({ type: UPDATE_PRODUCT_REQUEST });
 
-        await simulateDelay(500);
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        const { data } = await axios.put(
+            `/api/v1/admin/product/${id}`,
+            productData,
+            config
+        );
 
         dispatch({
             type: UPDATE_PRODUCT_SUCCESS,
-            payload: true,
+            payload: data.success,
         });
     } catch (error) {
         dispatch({
             type: UPDATE_PRODUCT_FAIL,
-            payload: "Failed to update product",
+            payload: error.response?.data?.message || "Failed to update product",
         });
     }
 }
 
-// Delete Product ---ADMIN (MOCK)
+// Delete Product ---ADMIN
 export const deleteProduct = (id) => async (dispatch) => {
     try {
         dispatch({ type: DELETE_PRODUCT_REQUEST });
 
-        await simulateDelay(400);
+        const { data } = await axios.delete(`/api/v1/admin/product/${id}`);
 
         dispatch({
             type: DELETE_PRODUCT_SUCCESS,
-            payload: true,
+            payload: data.success,
         });
     } catch (error) {
         dispatch({
             type: DELETE_PRODUCT_FAIL,
-            payload: "Failed to delete product",
+            payload: error.response?.data?.message || "Failed to delete product",
         });
     }
 }
 
-// Get Product Reviews ---ADMIN (MOCK)
+// Get Product Reviews ---ADMIN
 export const getAllReviews = (id) => async (dispatch) => {
     try {
         dispatch({ type: ALL_REVIEWS_REQUEST });
 
-        await simulateDelay(300);
-
-        const product = mockProducts.find(p => p._id === id);
-        const reviews = product ? product.reviews : [];
+        const { data } = await axios.get(`/api/v1/reviews?id=${id}`);
 
         dispatch({
             type: ALL_REVIEWS_SUCCESS,
-            payload: reviews,
+            payload: data.reviews,
         });
     } catch (error) {
         dispatch({
             type: ALL_REVIEWS_FAIL,
-            payload: "Failed to load reviews",
+            payload: error.response?.data?.message || "Failed to load reviews",
         });
     }
 }
 
-// Delete Product Review ---ADMIN (MOCK)
+// Delete Product Review ---ADMIN
 export const deleteReview = (reviewId, productId) => async (dispatch) => {
     try {
         dispatch({ type: DELETE_REVIEW_REQUEST });
 
-        await simulateDelay(400);
+        const { data } = await axios.delete(`/api/v1/review/${reviewId}?productId=${productId}`);
 
         dispatch({
             type: DELETE_REVIEW_SUCCESS,
-            payload: true,
+            payload: data.success,
         });
     } catch (error) {
         dispatch({
             type: DELETE_REVIEW_FAIL,
-            payload: "Failed to delete review",
+            payload: error.response?.data?.message || "Failed to delete review",
         });
     }
 }

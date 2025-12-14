@@ -1,9 +1,11 @@
 import Product from './Product';
 import Slider from 'react-slick';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { NextBtn, PreviousBtn } from '../Banner/Banner';
 import { Link } from 'react-router-dom';
-import { offerProducts } from '../../../utils/constants';
 import { getRandomProducts } from '../../../utils/functions';
+import DealCardShimmer from './DealCardShimmer';
 
 export const settings = {
     dots: false,
@@ -41,6 +43,24 @@ export const settings = {
 };
 
 const DealSlider = ({ title }) => {
+    const { products } = useSelector((state) => state.products);
+    const [showShimmer, setShowShimmer] = useState(true);
+    const [randomProducts, setRandomProducts] = useState([]);
+
+    // Simulate e-commerce loading with 1-second shimmer on every refresh
+    useEffect(() => {
+        setShowShimmer(true);
+        const timer = setTimeout(() => {
+            setShowShimmer(false);
+            // Randomize products after shimmer
+            if (products && products.length > 0) {
+                setRandomProducts(getRandomProducts(products, 12));
+            }
+        }, 1000); // 1 second shimmer
+
+        return () => clearTimeout(timer);
+    }, [products]);
+
     return (
         <section className="bg-white w-full shadow overflow-hidden">
             {/* <!-- header --> */}
@@ -51,11 +71,19 @@ const DealSlider = ({ title }) => {
             <hr />
             {/* <!-- header --> */}
 
+            {showShimmer ? (
                 <Slider {...settings}>
-                    {getRandomProducts(offerProducts, 12).map((item, i) => (
+                    {[...Array(12)].map((_, index) => (
+                        <DealCardShimmer key={index} />
+                    ))}
+                </Slider>
+            ) : (
+                <Slider {...settings}>
+                    {randomProducts.map((item, i) => (
                         <Product {...item} key={i} />
                     ))}
                 </Slider>
+            )}
 
         </section>
     );

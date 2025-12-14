@@ -15,6 +15,7 @@ import PublicRoute from './Routes/PublicRoute';
 import Home from './components/Home';
 import Products from './components/Products/Products';
 import ProductDetails from './components/ProductDetails/ProductDetails';
+import NetworkStatus from './components/Layouts/NetworkStatus';
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
 
   return (
     <>
+      <NetworkStatus />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />

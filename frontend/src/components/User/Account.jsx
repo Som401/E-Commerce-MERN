@@ -98,11 +98,6 @@ const Account = () => {
                                         <p className="text-gray-500 leading-5">Updating your email address (or mobile number) doesn't invalidate your account. Your account remains fully functional. You'll continue seeing your Order history, saved information and personal details.</p>
                                     </div>
 
-                                    <div className="flex flex-col gap-3 text-sm">
-                                        <p className="font-medium text-lg">Does my Seller account get affected when I update my email address?</p>
-                                        <p className="text-gray-500 leading-5">Flipkart has a 'single sign-on' policy. Any changes will reflect in your Seller account also.</p>
-                                    </div>
-
                                     <div className="flex items-center gap-8">
                                         <img draggable="false" className="w-full h-20 object-contain" src="https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/myProfileFooter_4e9fe2.png" alt="Footer" />
                                     </div>

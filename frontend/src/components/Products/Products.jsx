@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { clearErrors, getProducts } from '../../actions/productAction';
+import { clearErrors, getSliderProducts } from '../../actions/productAction';
 import Loader from '../Layouts/Loader';
 import Header from '../Layouts/Header/Header';
 import Product from './Product';
@@ -26,9 +26,14 @@ const Products = () => {
     const params = useParams();
     const location = useLocation();
 
-    const [price, setPrice] = useState([0, 200000]);
-    const [category, setCategory] = useState(location.search ? location.search.split("=")[1] : "");
+    const [price, setPrice] = useState([0, 6000]);
+    // Fix: Properly decode URL parameter for category
+    const [category, setCategory] = useState(() => {
+        const params = new URLSearchParams(location.search);
+        return params.get('category') || '';
+    });
     const [ratings, setRatings] = useState(0);
+    const [sort, setSort] = useState("");
 
     // pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -37,7 +42,7 @@ const Products = () => {
     const [categoryToggle, setCategoryToggle] = useState(true);
     const [ratingsToggle, setRatingsToggle] = useState(true);
 
-    const { products, loading, error, resultPerPage, filteredProductsCount } = useSelector((state) => state.products);
+    const { products, loading, error, isCached } = useSelector((state) => state.products);
     const keyword = params.keyword;
 
     const priceHandler = (e, newPrice) => {
@@ -45,25 +50,99 @@ const Products = () => {
     }
 
     const clearFilters = () => {
-        setPrice([0, 200000]);
+        setPrice([0, 6000]);
         setCategory("");
         setRatings(0);
+        setSort("");
     }
+
+    const handleMinPriceChange = (e) => {
+        const value = Number(e.target.value) || 0;
+        setPrice([Math.min(value, price[1]), price[1]]);
+    }
+
+    const handleMaxPriceChange = (e) => {
+        const value = Number(e.target.value) || 6000;
+        setPrice([price[0], Math.max(value, price[0])]);
+    }
+
+    useEffect(() => {
+        // Fetch all products once if not cached
+        if (!products || products.length === 0) {
+            dispatch(getSliderProducts());
+        }
+    }, [dispatch, products]);
 
     useEffect(() => {
         if (error) {
             enqueueSnackbar(error, { variant: "error" });
             dispatch(clearErrors());
         }
-        dispatch(getProducts(keyword, category, price, ratings, currentPage));
-    }, [dispatch, keyword, category, price, ratings, currentPage, error, enqueueSnackbar]);
+    }, [error, enqueueSnackbar, dispatch]);
+
+    // Client-side filtering - FAST!
+    const getFilteredProducts = () => {
+        if (!products || products.length === 0) return [];
+
+        let filtered = [...products];
+
+        // Filter by keyword
+        if (keyword) {
+            filtered = filtered.filter(product =>
+                product.name.toLowerCase().includes(keyword.toLowerCase()) ||
+                product.description.toLowerCase().includes(keyword.toLowerCase())
+            );
+        }
+
+        // Filter by category
+        if (category) {
+            filtered = filtered.filter(product => product.category === category);
+        }
+
+        // Filter by price range
+        filtered = filtered.filter(product =>
+            product.price >= price[0] && product.price <= price[1]
+        );
+
+        // Filter by ratings
+        if (ratings > 0) {
+            filtered = filtered.filter(product => product.ratings >= ratings);
+        }
+
+        // Sort products
+        if (sort) {
+            if (sort === 'name_asc') {
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sort === 'name_desc') {
+                filtered.sort((a, b) => b.name.localeCompare(a.name));
+            } else if (sort === 'price_asc') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sort === 'price_desc') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (sort === 'ratings_desc') {
+                filtered.sort((a, b) => b.ratings - a.ratings);
+            }
+        }
+
+        return filtered;
+    };
+
+    // Get filtered products
+    const filteredProducts = getFilteredProducts();
+    const filteredProductsCount = filteredProducts.length;
+
+    // Pagination
+    const resultPerPage = 12;
+    const indexOfLastProduct = currentPage * resultPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - resultPerPage;
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
     return (
         <>
             <MetaData title="All Products | Flipkart" />
 
             <Header />
-            <main className="w-full mt-14 sm:mt-0">
+            <main className="w-full mt-20 sm-8">
 
                 {/* <!-- row --> */}
                 <div className="flex gap-3 mt-2 sm:mt-2 sm:mx-3 m-auto mb-7">
@@ -92,13 +171,27 @@ const Products = () => {
                                         valueLabelDisplay="auto"
                                         getAriaLabel={() => 'Price range slider'}
                                         min={0}
-                                        max={200000}
+                                        max={6000}
                                     />
 
                                     <div className="flex gap-3 items-center justify-between mb-2 min-w-full">
-                                        <span className="flex-1 border px-4 py-1 rounded-sm text-gray-800 bg-gray-50">₹{price[0].toLocaleString()}</span>
+                                        <input
+                                            type="number"
+                                            value={price[0]}
+                                            onChange={handleMinPriceChange}
+                                            min={0}
+                                            max={price[1]}
+                                            className="flex-1 border px-4 py-1 rounded-sm text-gray-800 bg-gray-50 focus:outline-none focus:border-primary-blue"
+                                        />
                                         <span className="font-medium text-gray-400">to</span>
-                                        <span className="flex-1 border px-4 py-1 rounded-sm text-gray-800 bg-gray-50">₹{price[1].toLocaleString()}</span>
+                                        <input
+                                            type="number"
+                                            value={price[1]}
+                                            onChange={handleMaxPriceChange}
+                                            min={price[0]}
+                                            max={6000}
+                                            className="flex-1 border px-4 py-1 rounded-sm text-gray-800 bg-gray-50 focus:outline-none focus:border-primary-blue"
+                                        />
                                     </div>
                                 </div>
                                 {/* price slider filter */}
@@ -176,6 +269,28 @@ const Products = () => {
                     {/* <!-- search column --> */}
                     <div className="flex-1">
 
+                        {/* Sort dropdown */}
+                        <div className="flex items-center justify-between bg-white px-4 py-3 border-b">
+                            <p className="text-sm text-gray-500">
+                                Showing {products?.length} of {filteredProductsCount} products
+                            </p>
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium">Sort By:</span>
+                                <select
+                                    value={sort}
+                                    onChange={(e) => setSort(e.target.value)}
+                                    className="border rounded px-3 py-1.5 text-sm focus:outline-none focus:border-primary-blue"
+                                >
+                                    <option value="">Relevance</option>
+                                    <option value="name_asc">Name: A to Z</option>
+                                    <option value="name_desc">Name: Z to A</option>
+                                    <option value="price_asc">Price: Low to High</option>
+                                    <option value="price_desc">Price: High to Low</option>
+                                    <option value="ratings_desc">Ratings: High to Low</option>
+                                </select>
+                            </div>
+                        </div>
+
                         {!loading && products?.length === 0 && (
                             <div className="flex flex-col items-center justify-center gap-3 bg-white shadow-sm rounded-sm p-6 sm:p-16">
                                 <img draggable="false" className="w-1/2 h-44 object-contain" src="https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/error-no-search-results_2353c5.png" alt="Search Not Found" />
@@ -188,7 +303,7 @@ const Products = () => {
                             <div className="flex flex-col gap-2 pb-4 justify-center items-center w-full overflow-hidden bg-white">
 
                                 <div className="grid grid-cols-1 sm:grid-cols-4 w-full place-content-start overflow-hidden pb-4 border-b">
-                                    {products?.map((product) => (
+                                    {currentProducts?.map((product) => (
                                         <Product {...product} key={product._id} />
                                     ))
                                     }
