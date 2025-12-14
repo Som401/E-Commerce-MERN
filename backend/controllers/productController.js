@@ -2,13 +2,83 @@ const asyncErrorHandler = require('../middlewares/asyncErrorHandler');
 const ErrorHandler = require('../middlewares/error');
 const Product = require('../models/productModel');
 
-// Get all products
+// Get all products with filtering, search, and pagination
 exports.getAllProducts = asyncErrorHandler(async (req, res, next) => {
-  const products = await Product.find();
+  const resultPerPage = 12;
+  const productsCount = await Product.countDocuments();
+
+  // Build query object
+  let queryObj = {};
+
+  // Keyword search (search in name and description)
+  if (req.query.keyword) {
+    queryObj.$or = [
+      { name: { $regex: req.query.keyword, $options: 'i' } },
+      { description: { $regex: req.query.keyword, $options: 'i' } }
+    ];
+  }
+
+  // Category filter
+  if (req.query.category) {
+    queryObj.category = req.query.category;
+  }
+
+  // Price filter
+  if (req.query['price[gte]'] && req.query['price[lte]']) {
+    queryObj.price = {
+      $gte: Number(req.query['price[gte]']),
+      $lte: Number(req.query['price[lte]'])
+    };
+  }
+
+  // Ratings filter
+  if (req.query['ratings[gte]']) {
+    queryObj.ratings = { $gte: Number(req.query['ratings[gte]']) };
+  }
+
+  // Count filtered products
+  const filteredProductsCount = await Product.countDocuments(queryObj);
+
+  // Sorting
+  let sortObj = {};
+  if (req.query.sort) {
+    const sortParam = req.query.sort;
+    if (sortParam === 'name_asc') {
+      sortObj = { name: 1 };
+    } else if (sortParam === 'name_desc') {
+      sortObj = { name: -1 };
+    } else if (sortParam === 'price_asc') {
+      sortObj = { price: 1 };
+    } else if (sortParam === 'price_desc') {
+      sortObj = { price: -1 };
+    } else if (sortParam === 'ratings_desc') {
+      sortObj = { ratings: -1 };
+    }
+  }
+
+  // Pagination - skip if 'all' parameter is true
+  let products;
+  if (req.query.all === 'true') {
+    // Fetch ALL products without pagination for caching
+    products = await Product.find(queryObj)
+      .sort(Object.keys(sortObj).length > 0 ? sortObj : { createdAt: -1 });
+  } else {
+    // Normal pagination
+    const currentPage = Number(req.query.page) || 1;
+    const skip = resultPerPage * (currentPage - 1);
+
+    products = await Product.find(queryObj)
+      .sort(Object.keys(sortObj).length > 0 ? sortObj : { createdAt: -1 })
+      .limit(resultPerPage)
+      .skip(skip);
+  }
 
   res.status(200).json({
     success: true,
     products,
+    productsCount,
+    resultPerPage,
+    filteredProductsCount,
   });
 });
 

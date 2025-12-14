@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Loader from '../Layouts/Loader';
 import MetaData from '../Layouts/MetaData';
-import MinCategory from '../Layouts/MinCategory';
+import Header from '../Layouts/Header/Header';
 
 const Account = () => {
 
@@ -12,11 +12,11 @@ const Account = () => {
     return (
         <>
             <MetaData title="My Profile | Flipkart" />
+            <Header />
 
             {loading ? <Loader /> : (
                 <>
-                    <MinCategory />
-                    <main className="w-full mt-12 sm:mt-0">
+                    <main className="w-full mt-20 sm:mt-16">
 
                         <div className="flex gap-3.5 sm:w-11/12 sm:mt-4 m-auto mb-7">
 
@@ -96,11 +96,6 @@ const Account = () => {
                                     <div className="flex flex-col gap-3 text-sm">
                                         <p className="font-medium text-lg">What happens to my existing Flipkart account when I update my email address (or mobile number)?</p>
                                         <p className="text-gray-500 leading-5">Updating your email address (or mobile number) doesn't invalidate your account. Your account remains fully functional. You'll continue seeing your Order history, saved information and personal details.</p>
-                                    </div>
-
-                                    <div className="flex flex-col gap-3 text-sm">
-                                        <p className="font-medium text-lg">Does my Seller account get affected when I update my email address?</p>
-                                        <p className="text-gray-500 leading-5">Flipkart has a 'single sign-on' policy. Any changes will reflect in your Seller account also.</p>
                                     </div>
 
                                     <div className="flex items-center gap-8">

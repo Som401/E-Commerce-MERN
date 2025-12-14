@@ -28,12 +28,12 @@ module.exports = {
       pink: colors.pink,
       // custom colors
       primary: {
-        blue: '#2874f0',
+        blue: '#4B0082', // Indigo purple
         lightGreen: '#14be47',
         green: '#388e3c',
         yellow: '#ff9f00',
-        orange: '#fb641b',
-        darkBlue: '#172337',
+        orange: '#FF6E00', // Vibrant orange
+        darkBlue: '#2E0854', // Darker indigo
         grey: '#878787',
       },
     },

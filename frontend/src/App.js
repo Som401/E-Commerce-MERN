@@ -10,8 +10,12 @@ import UpdateProfile from './components/User/UpdateProfile';
 import UpdatePassword from './components/User/UpdatePassword';
 import ForgotPassword from './components/User/ForgotPassword';
 import ResetPassword from './components/User/ResetPassword';
-import ProtectedRoute from './Routes/ProtectedRoute';
+import ProtectedRoute from './Routes/ProtectedRoute.jsx';
 import PublicRoute from './Routes/PublicRoute';
+import Home from './components/Home';
+import Products from './components/Products/Products';
+import ProductDetails from './components/ProductDetails/ProductDetails';
+import NetworkStatus from './components/Layouts/NetworkStatus';
 
 function App() {
 
@@ -47,23 +51,12 @@ function App() {
 
   return (
     <>
+      <NetworkStatus />
       <Routes>
-        <Route path="/" element={
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold text-primary-blue mb-4">
-                E-Commerce MERN Application
-              </h1>
-              <p className="text-gray-600 mb-4">
-                Authentication System Complete! ✅
-              </p>
-              <a href="/login" className="text-primary-blue hover:underline">
-                Go to Login
-              </a>
-            </div>
-          </div>
-        } />
-
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/:keyword" element={<Products />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
 
         <Route path="/login" element={
           <PublicRoute>

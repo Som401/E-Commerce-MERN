@@ -1,17 +1,17 @@
 const express = require('express');
-const { 
-    registerUser, 
-    loginUser, 
-    logout, 
-    getUserDetails, 
-    updatePassword, 
-    updateProfile, 
-    forgotPassword, 
-    resetPassword, 
-    getAllUsers, 
-    getSingleUser, 
-    updateUserRole, 
-    deleteUser 
+const {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getUserDetails,
+  updatePassword,
+  updateProfile,
+  forgotPassword,
+  resetPassword,
+  getAllUsers,
+  getSingleUser,
+  updateUserRole,
+  deleteUser
 } = require('../controllers/userController');
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
@@ -19,7 +19,7 @@ const router = express.Router();
 
 router.route('/register').post(registerUser);
 router.route('/login').post(loginUser);
-router.route('/logout').get(logout);
+router.route('/logout').get(logoutUser);
 router.route('/password/forgot').post(forgotPassword);
 router.route('/password/reset/:token').put(resetPassword);
 
@@ -38,4 +38,4 @@ module.exports = router;
 
 
 // Remplace findByIdAndRemove par findByIdAndDelete
-await User.findByIdAndDelete(req.params.id);
+// await User.findByIdAndDelete(req.params.id);

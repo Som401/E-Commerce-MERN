@@ -1,40 +1,38 @@
 const mongoose = require('mongoose');
 
-// Schema definition
 const productSchema = new mongoose.Schema({
-    // product name
     name: {
-        type: String,                    // Type : texte
-        required: [true, "Please Enter Product Name"],  // Obligatoire
-        trim: true,                      // Supprimer les espaces au début/fin
-        maxLength: [100, "Product Name cannot exceed 100 characters"]
+        type: String,
+        required: [true, "Please Enter Product Name"],
+        trim: true,
+        maxLength: [200, "Product Name cannot exceed 200 characters"]
     },
-    
-    // Description
+
     description: {
         type: String,
         required: [true, "Please Enter Product Description"],
     },
-    
-    // Price
+
     price: {
         type: Number,
         required: [true, "Please Enter Product Price"],
         maxLength: [8, "Price cannot exceed 8 digits"]
     },
-    
-    // rating score
-    rating: {
+
+    cuttedPrice: {
+        type: Number,
+    },
+
+    ratings: {
         type: Number,
         default: 0
     },
-    
-    // product  images
+
     images: [
         {
             public_id: {
                 type: String,
-                required: true
+                required: false
             },
             url: {
                 type: String,
@@ -42,32 +40,51 @@ const productSchema = new mongoose.Schema({
             }
         }
     ],
-    
-    // Category
+
     category: {
         type: String,
         required: [true, "Please Enter Product Category"]
     },
-    
-    // Stock disponible
-    Stock: {
+    brand: {
+        name: {
+            type: String,
+        },
+        logo: {
+            public_id: String,
+            url: String
+        }
+    },
+
+    highlights: [String],
+
+    specifications: [
+        {
+            title: String,
+            description: String
+        }
+    ],
+
+    warranty: {
+        type: Number,
+        default: 1
+    },
+
+    stock: {
         type: Number,
         required: [true, "Please Enter Product Stock"],
         default: 1
     },
-    
-    // Nummber of reviews
+
     numOfReviews: {
         type: Number,
         default: 0
     },
-    
-    // reviews of users 
+
     reviews: [
         {
             user: {
                 type: mongoose.Schema.ObjectId,
-                ref: "User",  // Référence au modèle User
+                ref: "User",
                 required: true
             },
             name: {
@@ -88,20 +105,17 @@ const productSchema = new mongoose.Schema({
             }
         }
     ],
-    
-    // admin of the product who create 
+
     user: {
         type: mongoose.Schema.ObjectId,
         ref: "User",
         required: true
     },
-    
-//date of creation 
+
     createdAt: {
         type: Date,
         default: Date.now
     }
 });
 
-// mdole exporting
 module.exports = mongoose.model("Product", productSchema);

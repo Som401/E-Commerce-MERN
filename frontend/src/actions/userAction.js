@@ -114,9 +114,15 @@ export const loadUser = () => async (dispatch) => {
         });
 
     } catch (error) {
+        // Silently handle 401 errors - user is simply not authenticated
+        // This prevents "Please Login to Access" toast from showing on every page load
+        const errorMessage = error.response?.status === 401
+            ? null
+            : error.response?.data?.message;
+
         dispatch({
             type: LOAD_USER_FAIL,
-            payload: error.response.data.message,
+            payload: errorMessage,
         });
     }
 };
