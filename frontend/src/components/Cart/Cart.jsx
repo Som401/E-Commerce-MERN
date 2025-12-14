@@ -10,9 +10,14 @@ const Cart = () => {
 
     const navigate = useNavigate();
     const { cartItems } = useSelector((state) => state.cart);
+    const { isAuthenticated } = useSelector((state) => state.user);
 
     const placeOrderHandler = () => {
-        navigate('/login?redirect=shipping');
+        if (!isAuthenticated) {
+            navigate('/login?redirect=shipping');
+        } else {
+            navigate('/shipping');
+        }
     }
 
     return (

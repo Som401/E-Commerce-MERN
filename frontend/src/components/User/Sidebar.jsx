@@ -10,7 +10,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 const Sidebar = ({ activeTab }) => {
 
@@ -55,17 +54,13 @@ const Sidebar = ({ activeTab }) => {
                     <Link to="/account" className={`${activeTab === "profile" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-5 px-11 py-3.5 border-b`}>
                         Profile Information
                     </Link>
-                    <Link to="/account/update" className={`${activeTab === "addresses" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
+                    <Link to="/account/addresses" className={`${activeTab === "addresses" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
                         <LocationOnIcon sx={{ fontSize: '16px' }} />
                         Manage Addresses
                     </Link>
                     <Link to="/password/update" className={`${activeTab === "password" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
                         <LockIcon sx={{ fontSize: '16px' }} />
                         Change Password
-                    </Link>
-                    <Link to="/payment/methods" className={`${activeTab === "payments" ? "bg-purple-50 text-primary-blue font-medium" : "hover:bg-gray-50"} flex items-center gap-3 px-11 py-3.5 border-b`}>
-                        <CreditCardIcon sx={{ fontSize: '16px' }} />
-                        Payment Methods
                     </Link>
                 </div>
 

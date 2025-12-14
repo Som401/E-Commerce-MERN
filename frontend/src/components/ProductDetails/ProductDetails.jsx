@@ -37,7 +37,6 @@ const ProductDetails = () => {
 
     // reviews toggle
     const [open, setOpen] = useState(false);
-    const [viewAll, setViewAll] = useState(false);
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
 
@@ -337,7 +336,7 @@ const ProductDetails = () => {
                                             <p className="text-lg text-gray-500">({product.numOfReviews}) Reviews</p>
                                         </div>
 
-                                        {viewAll ?
+                                        {
                                             product.reviews?.map((rev, i) => (
                                                 <div className="flex flex-col gap-2 py-4 px-6 border-b" key={i}>
                                                     <Rating name="read-only" value={rev.rating} readOnly size="small" precision={0.5} />
@@ -345,17 +344,6 @@ const ProductDetails = () => {
                                                     <span className="text-sm text-gray-500">by {rev.name}</span>
                                                 </div>
                                             )).reverse()
-                                            :
-                                            product.reviews?.slice(-3).map((rev, i) => (
-                                                <div className="flex flex-col gap-2 py-4 px-6 border-b" key={i}>
-                                                    <Rating name="read-only" value={rev.rating} readOnly size="small" precision={0.5} />
-                                                    <p>{rev.comment}</p>
-                                                    <span className="text-sm text-gray-500">by {rev.name}</span>
-                                                </div>
-                                            )).reverse()
-                                        }
-                                        {product.reviews?.length > 3 &&
-                                            <button onClick={() => setViewAll(!viewAll)} className="w-1/3 m-2 rounded-sm shadow hover:shadow-lg py-2 bg-primary-blue text-white">{viewAll ? "View Less" : "View All"}</button>
                                         }
                                     </div>
                                     {/* <!-- reviews border box --> */}
