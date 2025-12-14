@@ -13,7 +13,7 @@ import StarIcon from '@mui/icons-material/Star';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import CachedIcon from '@mui/icons-material/Cached';
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import PaymentIcon from '@mui/icons-material/Payment';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -86,10 +86,6 @@ const ProductDetails = () => {
     }
 
     const addToCartHandler = () => {
-        if (!isAuthenticated) {
-            enqueueSnackbar("Please login to add items to cart", { variant: "warning" });
-            return;
-        }
         dispatch(addItemsToCart(productId));
         enqueueSnackbar("Product Added To Cart", { variant: "success" });
     }
@@ -102,15 +98,6 @@ const ProductDetails = () => {
 
     const goToCart = () => {
         navigate('/cart');
-    }
-
-    const buyNow = () => {
-        if (!isAuthenticated) {
-            enqueueSnackbar("Please login to buy products", { variant: "warning" });
-            return;
-        }
-        addToCartHandler();
-        navigate('/shipping');
     }
 
     useEffect(() => {
@@ -142,7 +129,7 @@ const ProductDetails = () => {
                 <>
                     <MetaData title={product.name} />
                     <Header />
-                    <main className="mt-20 sm:mt-4">
+                    <main className="mt-20 sm-4">
 
                         {/* <!-- product image & description container --> */}
                         <div className="w-full flex flex-col sm:flex-row bg-white sm:p-2 relative">
@@ -164,16 +151,16 @@ const ProductDetails = () => {
 
                                     <div className="w-full flex gap-3">
                                         {/* <!-- add to cart btn --> */}
-                                        {product.stock > 0 && (
-                                            <button onClick={itemInCart ? goToCart : addToCartHandler} className="p-4 w-1/2 flex items-center justify-center gap-2 text-white bg-primary-yellow rounded-sm shadow hover:shadow-lg">
+                                        {product.stock > 0 ? (
+                                            <button onClick={itemInCart ? goToCart : addToCartHandler} className="p-4 w-full flex items-center justify-center gap-2 text-white bg-primary-yellow rounded-sm shadow hover:shadow-lg">
                                                 <ShoppingCartIcon />
                                                 {itemInCart ? "GO TO CART" : "ADD TO CART"}
                                             </button>
+                                        ) : (
+                                            <button disabled className="p-4 w-full flex items-center justify-center gap-2 text-white bg-red-600 cursor-not-allowed rounded-sm shadow hover:shadow-lg">
+                                                OUT OF STOCK
+                                            </button>
                                         )}
-                                        <button onClick={buyNow} disabled={product.stock < 1 ? true : false} className={product.stock < 1 ? "p-4 w-full flex items-center justify-center gap-2 text-white bg-red-600 cursor-not-allowed rounded-sm shadow hover:shadow-lg" : "p-4 w-1/2 flex items-center justify-center gap-2 text-white bg-primary-orange rounded-sm shadow hover:shadow-lg"}>
-                                            <FlashOnIcon />
-                                            {product.stock < 1 ? "OUT OF STOCK" : "BUY NOW"}
-                                        </button>
                                         {/* <!-- add to cart btn --> */}
                                     </div>
 
@@ -258,7 +245,7 @@ const ProductDetails = () => {
                                                     <p className="flex items-center gap-3"><span className="text-primary-blue"><CachedIcon sx={{ fontSize: "18px" }} /></span> 7 Days Replacement Policy</p>
                                                 </li>
                                                 <li>
-                                                    <p className="flex items-center gap-3"><span className="text-primary-blue"><CurrencyRupeeIcon sx={{ fontSize: "18px" }} /></span> Cash on Delivery available</p>
+                                                    <p className="flex items-center gap-3"><span className="text-primary-blue"><PaymentIcon sx={{ fontSize: "18px" }} /></span> Cash on Delivery available</p>
                                                 </li>
                                             </ul>
                                         </div>

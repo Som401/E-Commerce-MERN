@@ -16,6 +16,8 @@ import Home from './components/Home';
 import Products from './components/Products/Products';
 import ProductDetails from './components/ProductDetails/ProductDetails';
 import NetworkStatus from './components/Layouts/NetworkStatus';
+import Cart from './components/Cart/Cart';
+import Wishlist from './components/Wishlist/Wishlist';
 
 function App() {
 
@@ -53,11 +55,19 @@ function App() {
     <>
       <NetworkStatus />
       <Routes>
+        {/* Home & Product Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:keyword" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetails />} />
 
+        {/* Cart Route */}
+        <Route path="/cart" element={<Cart />} />
+
+        {/* Wishlist Route */}
+        <Route path="/wishlist" element={<Wishlist />} />
+
+        {/* User Routes */}
         <Route path="/login" element={
           <PublicRoute>
             <Login />
