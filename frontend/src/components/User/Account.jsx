@@ -79,29 +79,6 @@ const Account = () => {
 
                                     </div>
 
-                                    <div className="flex items-center gap-8">
-                                        <span className="font-medium text-lg">FAQs</span>
-                                    </div>
-
-                                    <div className="flex flex-col gap-3 text-sm">
-                                        <p className="font-medium text-lg">What happens when I update my email address (or mobile number)?</p>
-                                        <p className="text-gray-500 leading-5">Your login email id (or mobile number) changes, likewise. You'll receive all your account related communication on your updated email address (or mobile number).</p>
-                                    </div>
-
-                                    <div className="flex flex-col gap-3 text-sm">
-                                        <p className="font-medium text-lg">When will my Flipkart account be updated with the new email address (or mobile number)?</p>
-                                        <p className="text-gray-500 leading-5">It happens as soon as you confirm the verification code sent to your email (or mobile) and save the changes.</p>
-                                    </div>
-
-                                    <div className="flex flex-col gap-3 text-sm">
-                                        <p className="font-medium text-lg">What happens to my existing Flipkart account when I update my email address (or mobile number)?</p>
-                                        <p className="text-gray-500 leading-5">Updating your email address (or mobile number) doesn't invalidate your account. Your account remains fully functional. You'll continue seeing your Order history, saved information and personal details.</p>
-                                    </div>
-
-                                    <div className="flex items-center gap-8">
-                                        <img draggable="false" className="w-full h-20 object-contain" src="https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/myProfileFooter_4e9fe2.png" alt="Footer" />
-                                    </div>
-
                                 </div>
 
                             </div>

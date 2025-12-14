@@ -236,7 +236,195 @@ exports.updateProfile = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
+// ============================================
+// ADDRESS MANAGEMENT
+// ============================================
+
+// Add New Address
+exports.addAddress = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    const { name, phoneNo, address, city, state, country, pinCode, isDefault } = req.body;
+
+    // If this is set as default, unset other defaults
+    if (isDefault) {
+        user.addresses.forEach(addr => addr.isDefault = false);
+    }
+
+    user.addresses.push({ name, phoneNo, address, city, state, country, pinCode, isDefault });
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Address added successfully"
+    });
+});
+
+// Update Address
+exports.updateAddress = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    const address = user.addresses.id(req.params.addressId);
+
+    if (!address) {
+        return next(new ErrorHandler("Address not found", 404));
+    }
+
+    const { name, phoneNo, address: addr, city, state, country, pinCode, isDefault } = req.body;
+
+    // If setting as default, unset other defaults
+    if (isDefault) {
+        user.addresses.forEach(a => a.isDefault = false);
+    }
+
+    address.name = name || address.name;
+    address.phoneNo = phoneNo || address.phoneNo;
+    address.address = addr || address.address;
+    address.city = city || address.city;
+    address.state = state || address.state;
+    address.country = country || address.country;
+    address.pinCode = pinCode || address.pinCode;
+    address.isDefault = isDefault !== undefined ? isDefault : address.isDefault;
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Address updated successfully"
+    });
+});
+
+// Delete Address
+exports.deleteAddress = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    user.addresses = user.addresses.filter(addr => addr._id.toString() !== req.params.addressId);
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Address deleted successfully"
+    });
+});
+
+// Set Default Address
+exports.setDefaultAddress = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    user.addresses.forEach(addr => {
+        addr.isDefault = addr._id.toString() === req.params.addressId;
+    });
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Default address set successfully"
+    });
+});
+
+// ============================================
+// PAYMENT METHOD MANAGEMENT
+// ============================================
+
+// Add Payment Method
+exports.addPaymentMethod = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    const { type, isDefault } = req.body;
+    let paymentData = { type, isDefault };
+
+    if (type === 'Card') {
+        const { cardNumber, cardHolderName, expiryDate } = req.body;
+
+        // Store only last 4 digits
+        const last4 = cardNumber.slice(-4);
+        paymentData.cardNumber = last4;
+        paymentData.cardHolderName = cardHolderName;
+        paymentData.expiryDate = expiryDate;
+    }
+
+    // If setting as default, unset other defaults
+    if (isDefault) {
+        user.paymentMethods.forEach(pm => pm.isDefault = false);
+    }
+
+    user.paymentMethods.push(paymentData);
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Payment method added successfully"
+    });
+});
+
+// Update Payment Method
+exports.updatePaymentMethod = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    const paymentMethod = user.paymentMethods.id(req.params.paymentId);
+
+    if (!paymentMethod) {
+        return next(new ErrorHandler("Payment method not found", 404));
+    }
+
+    const { type, cardNumber, cardHolderName, expiryDate, isDefault } = req.body;
+
+    // If setting as default, unset other defaults
+    if (isDefault) {
+        user.paymentMethods.forEach(pm => pm.isDefault = false);
+    }
+
+    if (type) paymentMethod.type = type;
+    if (cardNumber) paymentMethod.cardNumber = cardNumber.slice(-4); // Store only last 4
+    if (cardHolderName) paymentMethod.cardHolderName = cardHolderName;
+    if (expiryDate) paymentMethod.expiryDate = expiryDate;
+    if (isDefault !== undefined) paymentMethod.isDefault = isDefault;
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Payment method updated successfully"
+    });
+});
+
+// Delete Payment Method
+exports.deletePaymentMethod = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    user.paymentMethods = user.paymentMethods.filter(pm => pm._id.toString() !== req.params.paymentId);
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Payment method deleted successfully"
+    });
+});
+
+// Set Default Payment Method
+exports.setDefaultPayment = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    user.paymentMethods.forEach(pm => {
+        pm.isDefault = pm._id.toString() === req.params.paymentId;
+    });
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Default payment method set successfully"
+    });
+});
+
+// ============================================
 // ADMIN DASHBOARD
+// ============================================
 
 // Get All Users --ADMIN
 exports.getAllUsers = asyncErrorHandler(async (req, res, next) => {

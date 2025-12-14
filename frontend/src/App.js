@@ -8,6 +8,7 @@ import Register from './components/User/Register';
 import Account from './components/User/Account';
 import UpdateProfile from './components/User/UpdateProfile';
 import UpdatePassword from './components/User/UpdatePassword';
+import ManageAddresses from './components/User/ManageAddresses';
 import ForgotPassword from './components/User/ForgotPassword';
 import ResetPassword from './components/User/ResetPassword';
 import ProtectedRoute from './Routes/ProtectedRoute.jsx';
@@ -18,6 +19,12 @@ import ProductDetails from './components/ProductDetails/ProductDetails';
 import NetworkStatus from './components/Layouts/NetworkStatus';
 import Cart from './components/Cart/Cart';
 import Wishlist from './components/Wishlist/Wishlist';
+import Shipping from './components/Cart/Shipping';
+import Payment from './components/Cart/Payment';
+import OrderConfirm from './components/Cart/OrderConfirm';
+import OrderSuccess from './components/Cart/OrderSuccess';
+import MyOrders from './components/Order/MyOrders';
+import OrderDetails from './components/Order/OrderDetails';
 
 function App() {
 
@@ -67,6 +74,40 @@ function App() {
         {/* Wishlist Route */}
         <Route path="/wishlist" element={<Wishlist />} />
 
+        {/* Checkout Routes - Protected */}
+        <Route path="/shipping" element={
+          <ProtectedRoute>
+            <Shipping />
+          </ProtectedRoute>
+        } />
+        <Route path="/payment" element={
+          <ProtectedRoute>
+            <Payment />
+          </ProtectedRoute>
+        } />
+        <Route path="/order/confirm" element={
+          <ProtectedRoute>
+            <OrderConfirm />
+          </ProtectedRoute>
+        } />
+        <Route path="/order/success" element={
+          <ProtectedRoute>
+            <OrderSuccess />
+          </ProtectedRoute>
+        } />
+
+        {/* Order Viewing Routes - Protected */}
+        <Route path="/orders" element={
+          <ProtectedRoute>
+            <MyOrders />
+          </ProtectedRoute>
+        } />
+        <Route path="/order/:id" element={
+          <ProtectedRoute>
+            <OrderDetails />
+          </ProtectedRoute>
+        } />
+
         {/* User Routes */}
         <Route path="/login" element={
           <PublicRoute>
@@ -104,6 +145,11 @@ function App() {
         <Route path="/password/update" element={
           <ProtectedRoute>
             <UpdatePassword />
+          </ProtectedRoute>
+        } />
+        <Route path="/account/addresses" element={
+          <ProtectedRoute>
+            <ManageAddresses />
           </ProtectedRoute>
         } />
 

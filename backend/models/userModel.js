@@ -43,6 +43,23 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    addresses: [{
+        name: { type: String, required: true },
+        phoneNo: { type: Number, required: true },
+        address: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String, required: true },
+        country: { type: String, required: true },
+        pinCode: { type: Number, required: true },
+        isDefault: { type: Boolean, default: false }
+    }],
+    paymentMethods: [{
+        type: { type: String, enum: ['COD', 'Card'], required: true },
+        cardNumber: String, // Last 4 digits only for display
+        cardHolderName: String,
+        expiryDate: String,
+        isDefault: { type: Boolean, default: false }
+    }],
     resetPasswordToken: String,
     resetPasswordExpire: Date,
 });

@@ -11,7 +11,15 @@ const {
   getAllUsers,
   getSingleUser,
   updateUserRole,
-  deleteUser
+  deleteUser,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+  setDefaultAddress,
+  addPaymentMethod,
+  updatePaymentMethod,
+  deletePaymentMethod,
+  setDefaultPayment
 } = require('../controllers/userController');
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
@@ -26,6 +34,13 @@ router.route('/password/reset/:token').put(resetPassword);
 router.route('/me').get(isAuthenticatedUser, getUserDetails);
 router.route('/password/update').put(isAuthenticatedUser, updatePassword);
 router.route('/me/update').put(isAuthenticatedUser, updateProfile);
+
+// Address Management
+router.route('/user/address').post(isAuthenticatedUser, addAddress);
+router.route('/user/address/:addressId')
+  .put(isAuthenticatedUser, updateAddress)
+  .delete(isAuthenticatedUser, deleteAddress);
+router.route('/user/address/:addressId/default').put(isAuthenticatedUser, setDefaultAddress);
 
 // Admin routes
 router.route('/admin/users').get(isAuthenticatedUser, authorizeRoles('admin'), getAllUsers);

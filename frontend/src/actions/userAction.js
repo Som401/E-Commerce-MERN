@@ -265,6 +265,121 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
     }
 };
 
+// ============================================
+// ADDRESS MANAGEMENT
+// ============================================
+
+// Add Address
+export const addAddress = (addressData) => async (dispatch) => {
+    try {
+        const config = {
+            headers: { "Content-Type": "application/json" },
+        };
+
+        await axios.post('/api/v1/user/address', addressData, config);
+
+        // Reload user to get updated addresses
+        dispatch(loadUser());
+
+    } catch (error) {
+        return error.response?.data?.message || error.message;
+    }
+};
+
+// Update Address
+export const updateAddress = (addressId, addressData) => async (dispatch) => {
+    try {
+        const config = {
+            headers: { "Content-Type": "application/json" },
+        };
+
+        await axios.put(`/api/v1/user/address/${addressId}`, addressData, config);
+
+        dispatch(loadUser());
+
+    } catch (error) {
+        return error.response?.data?.message || error.message;
+    }
+};
+
+// Delete Address
+export const deleteAddress = (addressId) => async (dispatch) => {
+    try {
+        await axios.delete(`/api/v1/user/address/${addressId}`);
+        dispatch(loadUser());
+    } catch (error) {
+        return error.response?.data?.message || error.message;
+    }
+};
+
+// Set Default Address
+export const setDefaultAddress = (addressId) => async (dispatch) => {
+    try {
+        await axios.put(`/api/v1/user/address/${addressId}/default`);
+        dispatch(loadUser());
+    } catch (error) {
+        return error.response?.data?.message || error.message;
+    }
+};
+
+// ============================================
+// PAYMENT METHOD MANAGEMENT
+// ============================================
+
+// Add Payment Method
+export const addPaymentMethod = (paymentData) => async (dispatch) => {
+    try {
+        const config = {
+            headers: { "Content-Type": "application/json" },
+        };
+
+        await axios.post('/api/v1/user/payment', paymentData, config);
+        dispatch(loadUser());
+
+    } catch (error) {
+        return error.response?.data?.message || error.message;
+    }
+};
+
+// Update Payment Method
+export const updatePaymentMethod = (paymentId, paymentData) => async (dispatch) => {
+    try {
+        const config = {
+            headers: { "Content-Type": "application/json" },
+        };
+
+        await axios.put(`/api/v1/user/payment/${paymentId}`, paymentData, config);
+        dispatch(loadUser());
+
+    } catch (error) {
+        return error.response?.data?.message || error.message;
+    }
+};
+
+// Delete Payment Method
+export const deletePaymentMethod = (paymentId) => async (dispatch) => {
+    try {
+        await axios.delete(`/api/v1/user/payment/${paymentId}`);
+        dispatch(loadUser());
+    } catch (error) {
+        return error.response?.data?.message || error.message;
+    }
+};
+
+// Set Default Payment Method
+export const setDefaultPayment = (paymentId) => async (dispatch) => {
+    try {
+        await axios.put(`/api/v1/user/payment/${paymentId}/default`);
+        dispatch(loadUser());
+    } catch (error) {
+        return error.response?.data?.message || error.message;
+    }
+};
+
+// ============================================
+// ADMIN FUNCTIONS
+// ============================================
+
 // Get All Users ---ADMIN
 export const getAllUsers = () => async (dispatch) => {
     try {
@@ -359,4 +474,3 @@ export const deleteUser = (id) => async (dispatch) => {
 export const clearErrors = () => async (dispatch) => {
     dispatch({ type: CLEAR_ERRORS });
 };
-

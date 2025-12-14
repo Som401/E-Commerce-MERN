@@ -61,6 +61,10 @@ const orderSchema = new mongoose.Schema({
     id: String,
     status: String,
   },
+  paymentMethod: {
+    type: { type: String, enum: ['COD', 'Card'], required: true },
+    details: String  // "Cash on Delivery" or "Card ending in ****1234"
+  },
   paidAt: Date,
   itemsPrice: {
     type: Number,
@@ -84,9 +88,9 @@ const orderSchema = new mongoose.Schema({
   },
   orderStatus: {
     type: String,
-    default: 'Processing',
+    default: 'Pending',
     enum: {
-      values: ['Processing', 'Shipped', 'Delivered', 'Cancelled'],
+      values: ['Pending', 'Shipped', 'Approved', 'Declined'],
       message: 'Please select valid order status',
     },
   },

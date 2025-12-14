@@ -4,6 +4,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { forgotPasswordReducer, profileReducer, userReducer, allUsersReducer, userDetailsReducer } from './reducers/userReducer';
 import { cartReducer, wishlistReducer } from './reducers/cartReducer';
 import { productsReducer, productDetailsReducer, newReviewReducer, newProductReducer, productReducer, productReviewsReducer, reviewReducer } from './reducers/productReducer';
+import { newOrderReducer, myOrdersReducer, orderDetailsReducer } from './reducers/orderReducer';
 
 const reducer = combineReducers({
     user: userReducer,
@@ -20,6 +21,9 @@ const reducer = combineReducers({
     product: productReducer,
     productReviews: productReviewsReducer,
     review: reviewReducer,
+    newOrder: newOrderReducer,
+    myOrders: myOrdersReducer,
+    orderDetails: orderDetailsReducer,
 });
 
 let initialState = {
