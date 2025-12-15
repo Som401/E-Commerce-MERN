@@ -25,6 +25,10 @@ import OrderConfirm from './components/Cart/OrderConfirm';
 import OrderSuccess from './components/Cart/OrderSuccess';
 import MyOrders from './components/Order/MyOrders';
 import OrderDetails from './components/Order/OrderDetails';
+import Dashboard from './components/Admin/Dashboard';
+import ProductList from './components/Admin/ProductList';
+import NewProduct from './components/Admin/NewProduct';
+import UpdateProduct from './components/Admin/UpdateProduct';
 
 function App() {
 
@@ -150,6 +154,28 @@ function App() {
         <Route path="/account/addresses" element={
           <ProtectedRoute>
             <ManageAddresses />
+          </ProtectedRoute>
+        } />
+
+        {/* Admin Routes */}
+        <Route path="/admin/dashboard" element={
+          <ProtectedRoute isAdmin={true}>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/products" element={
+          <ProtectedRoute isAdmin={true}>
+            <ProductList />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/product/new" element={
+          <ProtectedRoute isAdmin={true}>
+            <NewProduct />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/product/:id" element={
+          <ProtectedRoute isAdmin={true}>
+            <UpdateProduct />
           </ProtectedRoute>
         } />
 

@@ -4,13 +4,16 @@ import Loader from '../components/Layouts/Loader';
 
 const PublicRoute = ({ children }) => {
 
-    const { loading, isAuthenticated } = useSelector((state) => state.user);
+    const { loading, isAuthenticated, user } = useSelector((state) => state.user);
 
     if (loading) {
         return <Loader />;
     }
 
     if (isAuthenticated) {
+        if (user?.role === "admin") {
+            return <Navigate to="/admin/dashboard" />;
+        }
         return <Navigate to="/account" />;
     }
 
