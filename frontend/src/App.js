@@ -163,42 +163,42 @@ function App() {
 
         {/* Admin Routes - Protection Temporarily Disabled */}
         <Route path="/admin/dashboard" element={
-          <ProtectedRoute>
+          <ProtectedRoute isAdmin={true}>
             <DashboardPage />
           </ProtectedRoute>
         } />
         <Route path="/admin/products" element={
-          <ProtectedRoute>
+          <ProtectedRoute isAdmin={true}>
             <ProductTable />
           </ProtectedRoute>
         } />
         <Route path="/admin/orders" element={
-          <ProtectedRoute>
+          <ProtectedRoute isAdmin={true}>
             <OrderTable />
           </ProtectedRoute>
         } />
         <Route path="/admin/users" element={
-          <ProtectedRoute>
+          <ProtectedRoute isAdmin={true}>
             <UserTable />
           </ProtectedRoute>
         } />
         <Route path="/admin/new_product" element={
-          <ProtectedRoute>
+          <ProtectedRoute isAdmin={true}>
             <NewProduct />
           </ProtectedRoute>
         } />
         <Route path="/admin/reviews" element={
-          <ProtectedRoute>
+          <ProtectedRoute isAdmin={true}>
             <ReviewsTable />
           </ProtectedRoute>
         } />
         <Route path="/admin/order/:id" element={
-          <ProtectedRoute>
+          <ProtectedRoute isAdmin={true}>
             <UpdateOrder />
           </ProtectedRoute>
         } />
         <Route path="/admin/product/:id" element={
-          <ProtectedRoute>
+          <ProtectedRoute isAdmin={true}>
             <UpdateProduct />
           </ProtectedRoute>
         } />

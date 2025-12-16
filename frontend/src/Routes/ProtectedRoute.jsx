@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import Loader from '../components/Layouts/Loader';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ isAdmin, children }) => {
 
     const { loading, isAuthenticated, user } = useSelector((state) => state.user);
 
@@ -14,7 +14,8 @@ const ProtectedRoute = ({ children }) => {
         return <Navigate to="/login" />;
     }
 
-    if (user?.role !== "admin") {
+    // Only check for admin role if isAdmin prop is true
+    if (isAdmin && user?.role !== "admin") {
         return <Navigate to="/login" />;
     }
 
