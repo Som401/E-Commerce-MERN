@@ -84,6 +84,12 @@ export const productsReducer = (state = { products: [], loading: false, isCached
                 isCached: state.isCached || false,
                 cachedAt: state.cachedAt || null,
             };
+        case 'INVALIDATE_CACHE':
+            return {
+                ...state,
+                isCached: false,
+                cachedAt: null,
+            };
         case CLEAR_ERRORS:
             return {
                 ...state,
