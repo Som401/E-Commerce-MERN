@@ -19,6 +19,14 @@ import ProductDetails from './components/ProductDetails/ProductDetails';
 import NetworkStatus from './components/Layouts/NetworkStatus';
 import Cart from './components/Cart/Cart';
 import Wishlist from './components/Wishlist/Wishlist';
+import DashboardPage from './components/Admin/DashboardPage';
+import ProductTable from './components/Admin/ProductTable';
+import OrderTable from './components/Admin/OrderTable';
+import UserTable from './components/Admin/UserTable';
+import NewProduct from './components/Admin/NewProduct';
+import ReviewsTable from './components/Admin/ReviewsTable';
+import UpdateOrder from './components/Admin/UpdateOrder';
+import UpdateProduct from './components/Admin/UpdateProduct';
 import Shipping from './components/Cart/Shipping';
 import Payment from './components/Cart/Payment';
 import OrderConfirm from './components/Cart/OrderConfirm';
@@ -150,6 +158,48 @@ function App() {
         <Route path="/account/addresses" element={
           <ProtectedRoute>
             <ManageAddresses />
+          </ProtectedRoute>
+        } />
+
+        {/* Admin Routes - Protection Temporarily Disabled */}
+        <Route path="/admin/dashboard" element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/products" element={
+          <ProtectedRoute>
+            <ProductTable />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/orders" element={
+          <ProtectedRoute>
+            <OrderTable />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/users" element={
+          <ProtectedRoute>
+            <UserTable />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/new_product" element={
+          <ProtectedRoute>
+            <NewProduct />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/reviews" element={
+          <ProtectedRoute>
+            <ReviewsTable />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/order/:id" element={
+          <ProtectedRoute>
+            <UpdateOrder />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/product/:id" element={
+          <ProtectedRoute>
+            <UpdateProduct />
           </ProtectedRoute>
         } />
 

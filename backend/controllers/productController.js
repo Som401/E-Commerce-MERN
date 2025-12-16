@@ -207,6 +207,30 @@ exports.deleteReview = asyncErrorHandler(async (req, res, next) => {
 
 // Create product (admin)
 exports.createProduct = asyncErrorHandler(async (req, res, next) => {
+  const cloudinary = require('cloudinary');
+
+  let images = [];
+
+  if (typeof req.body.images === "string") {
+    images.push(req.body.images);
+  } else {
+    images = req.body.images;
+  }
+
+  const imagesLinks = [];
+
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i], {
+      folder: "products",
+    });
+
+    imagesLinks.push({
+      public_id: result.public_id,
+      url: result.secure_url,
+    });
+  }
+
+  req.body.images = imagesLinks;
   req.body.user = req.user.id;
 
   const product = await Product.create(req.body);
@@ -220,10 +244,43 @@ exports.createProduct = asyncErrorHandler(async (req, res, next) => {
 
 // Update product (admin)
 exports.updateProduct = asyncErrorHandler(async (req, res, next) => {
+  const cloudinary = require('cloudinary');
+
   let product = await Product.findById(req.params.id);
 
   if (!product) {
     return next(new ErrorHandler('Product not found', 404));
+  }
+
+  // Images handling
+  let images = [];
+
+  if (typeof req.body.images === "string") {
+    images.push(req.body.images);
+  } else if (req.body.images) {
+    images = req.body.images;
+  }
+
+  if (images.length > 0 && images[0] !== undefined) {
+    // Delete old images from cloudinary
+    for (let i = 0; i < product.images.length; i++) {
+      await cloudinary.v2.uploader.destroy(product.images[i].public_id);
+    }
+
+    const imagesLinks = [];
+
+    for (let i = 0; i < images.length; i++) {
+      const result = await cloudinary.v2.uploader.upload(images[i], {
+        folder: "products",
+      });
+
+      imagesLinks.push({
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+    }
+
+    req.body.images = imagesLinks;
   }
 
   product = await Product.findByIdAndUpdate(req.params.id, req.body, {

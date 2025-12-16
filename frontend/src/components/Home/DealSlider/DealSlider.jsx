@@ -71,7 +71,7 @@ const DealSlider = ({ title }) => {
             <hr />
             {/* <!-- header --> */}
 
-            {showShimmer ? (
+            {showShimmer || !products || products.length === 0 ? (
                 <Slider {...settings}>
                     {[...Array(12)].map((_, index) => (
                         <DealCardShimmer key={index} />
